@@ -1,3 +1,42 @@
+# Fake functions to simulate the behavior of other modules.
+function Get-Secret { 
+    param (
+        [Parameter(Mandatory)]
+        [string] $Name,
+        [Parameter(Mandatory)]
+        [string] $Vault
+    )
+
+    "aaaa" 
+}
+function Send-EmaileMessage {
+    param (
+        [Parameter(Mandatory)]
+        [hashtable] $From,
+
+        [Parameter(Mandatory)]
+        [string] $To,
+
+        [Parameter(Mandatory)]
+        [string] $Server,
+
+        [Parameter(Mandatory)]
+        [string] $HTML,
+
+        [Parameter(Mandatory)]
+        [string] $Subject,
+
+        [Parameter(Mandatory)]
+        [string] $Attachment,
+
+        [Parameter(Mandatory)]
+        [SecureString] $Password
+    )
+
+    # nop
+}
+
+
 function Get-RandomRoute {
     param (
         [Parameter(Mandatory)]
@@ -104,11 +143,10 @@ function Send-Track {
         HTML       = "<B>Your next journey awaits!</B><br/>"
         Subject    = 'Here is your run for today!'
         Attachment = $tempFile
-        Password   = 'TempPassword'
+        Password   = Get-Secret -Name 'MailozaurrPassword' -Vault 'CredMan'
     }
 
     Send-EmailMessage @sendEmailMessageSplat -ErrorAction Stop
-
 }
 
 function Get-TempFileName {
