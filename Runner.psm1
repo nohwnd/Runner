@@ -11,10 +11,10 @@ function Get-RandomRoute {
     )
 
     $url = Get-Url -Route "tracks" -Parameters @{ 
-            length = $Length
-            difficulty = $Difficulty
-            count = 10 
-        }
+        length     = $Length
+        difficulty = $Difficulty
+        count      = 10 
+    }
 
     if ($Unit -eq "mi") {
         $Length = ConvertTo-Km -Mile $Length
@@ -42,13 +42,13 @@ function Get-RandomRoute {
     $rating = Invoke-RestMethod -Uri $ratingUrl -Method GET
 
     return @{
-        TrackId = $route.trackId
+        TrackId    = $route.trackId
         Difficulty = $route.trackDifficulty
-        Length = $route.length
-        Gpx = $route.gpx
-        Name = $route.name
+        Length     = $route.length
+        Gpx        = $route.gpx
+        Name       = $route.name
 
-        Rating = $rating.rating
+        Rating     = $rating.rating
     }
 }
 
@@ -78,4 +78,48 @@ function ConvertTo-Km {
     )
 
     return $Miles * 1.60934
+}
+
+function Send-Track {
+    param(
+        [Parameter(Mandatory)]
+        [hashtable] $Track
+    )
+
+    // https://github.com/EvotecIT/Mailozaurr/blob/v2-speedygonzales/Tests/Send-EmailMessage.Tests.ps1
+
+    if ($null -eq $Track.Gpx) {
+        throw "Track.Gpx cannot be null."
+    }
+
+    $tempFile = Get-TempFileName -Extension ".gpx"
+
+    $sendEmailMessageSplat = @{
+        From       = @{ 
+            Name  = $configuration.Name
+            Email = $configuration.Email
+        }
+        To         = $configuration.Email
+        Server     = 'smtp.office365.com'
+        HTML       = "<B>Your next journey awaits!</B><br/>"
+        Subject    = 'Here is your run for today!'
+        Attachment = $tempFile
+        Password   = 'TempPassword'
+    }
+
+    Send-EmailMessage @sendEmailMessageSplat -ErrorAction Stop
+
+}
+
+function Get-TempFileName {
+    param (
+        [string] $Extension
+    )
+
+    $tempFile = [System.IO.Path]::GetTempFileName()
+    if ($Extension) {
+        $tempFile = [System.IO.Path]::ChangeExtension($tempFile, $Extension)
+    }
+
+    return $tempFile
 }
