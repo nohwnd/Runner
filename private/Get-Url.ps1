@@ -8,7 +8,7 @@ function Get-Url {
     )
 
     $baseUrl = Get-BaseUrl
-    $queryString = foreach ($p in $Parameters) { "$($p.Key)=$($p.Value)" } -join "&"
+    $queryString = $(foreach ($p in $Parameters.GetEnumerator()) { "$($p.Key)=$($p.Value)" }) -join "&"
     
-    return "$baseUrl/$Route?$queryString"
+    return "$baseUrl/${Route}?$queryString"
 }
