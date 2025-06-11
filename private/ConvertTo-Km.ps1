@@ -4,5 +4,5 @@ function ConvertTo-Km {
         [decimal] $Mile
     )
 
-    return $Miles * 1.60934
+    return $Mile * 1.60934
 }
