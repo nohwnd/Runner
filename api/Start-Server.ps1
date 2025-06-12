@@ -1,4 +1,3 @@
-
 function Start-Server {
     $listener = [System.Net.HttpListener]::new()
     try {
@@ -19,15 +18,37 @@ function Start-Server {
                 $response.StatusCode = 404 # not found
             }
 
-            switch ($request.Url.AbsolutePath) {
+            $url = $request.Url
+
+            switch ($url.AbsolutePath) {
                 "/tracks" {
-                    $json = [System.IO.File]::ReadAllBytes("$PSScriptRoot/json/tracks.json")
-                    $response.OutputStream.Write($json, 0, $json.Length)
+                    $json = Get-Content "$PSScriptRoot/json/tracks.json" | ConvertFrom-Json
+                    $filter =  if ($url.Query) {
+                        $sb = $(foreach ($pair in $url.Query.Substring(1) -split '&') {
+                            $k, $v = $pair -split "="
+                            "`$_.{$k} -eq '$v'"
+                        }) -join " -and "
+                        [scriptblock]::Create($sb)
+                    } else { {$true} }
+
+                    $items = @($json | Where-Object $filter)
+                    $filteredJson =   ConvertTo-Json $items
+                    $response.OutputStream.Write([System.Text.Encoding]::UTF8.GetBytes($filteredJson), 0, [System.Text.Encoding]::UTF8.GetByteCount($filteredJson))
                     $response.StatusCode = 200 # ok
                 }
                 "/ratings" {
-                    $json = [System.IO.File]::ReadAllBytes("$PSScriptRoot/json/ratings.json")
-                    $response.OutputStream.Write($json, 0, $json.Length)
+                    $json = Get-Content "$PSScriptRoot/json/ratings.json" | ConvertFrom-Json
+                    $filter =  if ($url.Query) {
+                        $sb = $(foreach ($pair in $url.Query.Substring(1) -split '&') {
+                            $k, $v = $pair -split "="
+                            "`$_.{$k} -eq '$v'"
+                        }) -join " -and "
+                        [scriptblock]::Create($sb)
+                    } else { {$true} }
+
+                    $items = @($json | Where-Object $filter)
+                    $filteredJson =   ConvertTo-Json $items
+                    $response.OutputStream.Write([System.Text.Encoding]::UTF8.GetBytes($filteredJson), 0, [System.Text.Encoding]::UTF8.GetByteCount($filteredJson))
                     $response.StatusCode = 200 # ok
                 }
                 default {
@@ -42,3 +63,5 @@ function Start-Server {
         $listener.Close()
     }
 }
+
+Start-Server

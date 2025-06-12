@@ -12,15 +12,14 @@ function Get-RandomTrack {
 
     $url = Get-Url -Route "tracks" -Parameters @{ 
         length     = $Length
-        difficulty = $Difficulty
-        count      = 10 
+        trackDifficulty = ConvertTo-DifficultyNumber $Difficulty
     }
 
     if ($Unit -eq "mi") {
         $Length = ConvertTo-Km -Mile $Length
     }
 
-    # "https://api.example.com/tracks?length=7&count=10"
+    # "https://api.example.com/tracks?length=7"
     $routes = Invoke-RestMethod -Uri $url -Method GET
 
     # @{
@@ -32,6 +31,10 @@ function Get-RandomTrack {
     # }
     
     $route = $routes | Get-Random
+
+    if (-not $route) {
+        throw "No routes found matching the criteria."
+    }
 
     $ratingUrl = Get-Url -Route "ratings" -Parameters @{ trackId = $route.trackId }
 
