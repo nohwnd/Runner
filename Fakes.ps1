@@ -34,5 +34,5 @@ function Send-EmailMessage {
         [SecureString] $Password
     )
 
-    # nop
+    Write-Host "Sending email to: $To with attachment: $Attachment"
 }

@@ -22,13 +22,13 @@ function Get-RandomTrack {
     # "https://api.example.com/tracks?length=7"
     $routes = Invoke-RestMethod -Uri $url -Method GET
 
-    # @{
+    # @( @{
     #     trackId = 123
     #     trackDifficulty = 1
     #     length = 9
     #     gpx = "<gpx>...</gpx>"
     #     name = "John's Trail"
-    # }
+    # } )
     
     $route = $routes | Get-Random
 
@@ -38,10 +38,10 @@ function Get-RandomTrack {
 
     $ratingUrl = Get-Url -Route "ratings" -Parameters @{ trackId = $route.trackId }
 
-    # @{
+    # @( @{
     #     trackId = 123
     #     rating = 4.5
-    # }
+    # } )
     $rating = Invoke-RestMethod -Uri $ratingUrl -Method GET
 
     return @{
