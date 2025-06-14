@@ -8,6 +8,7 @@ $pesterConfiguration.CodeCoverage.Path = @(
     "$PSScriptRoot\Runner.psm1"
 )
 $pesterConfiguration.Run.PassThru = $true
+# $pesterConfiguration.Run.TestExtension = "IntegrationTests.ps1"
 
 $result = Invoke-Pester -Configuration $pesterConfiguration
 
