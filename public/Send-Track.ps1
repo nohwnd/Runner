@@ -1,10 +1,10 @@
 function Send-Track {
     param(
         [Parameter(Mandatory)]
-        [hashtable] $Track
+        $Track
     )
 
-    // https://github.com/EvotecIT/Mailozaurr/blob/v2-speedygonzales/Tests/Send-EmailMessage.Tests.ps1
+    # https://github.com/EvotecIT/Mailozaurr/blob/v2-speedygonzales/Tests/Send-EmailMessage.Tests.ps1
 
     if ($null -eq $Track.Gpx) {
         throw "Track.Gpx cannot be null."
@@ -12,12 +12,14 @@ function Send-Track {
 
     $tempFile = Get-TempFileName -Extension ".gpx"
 
+    Set-Content -Path $tempFile -Value $Track.Gpx -Encoding UTF8
+
     $sendEmailMessageSplat = @{
         From       = @{ 
-            Name  = $configuration.Name
-            Email = $configuration.Email
+            Name  = "Track Runner"
+            Email = "jakub@jakub.com"
         }
-        To         = $configuration.Email
+        To         = "jakub@jakub.com"
         Server     = 'smtp.office365.com'
         HTML       = "<B>Your next journey awaits!</B><br/>"
         Subject    = 'Here is your run for today!'

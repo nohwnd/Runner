@@ -126,4 +126,14 @@ Describe "Get-RandomTrack" {
         Write-Host "Actual: $($actual -join ', ')"
         $actual.Count | Should -Be 3 -Because "we are getting random tracks, and with enough tries we should see all our example tracks being randomly selected"
     }
+
+    It "throws when no tracks are found" {
+        Mock -CommandName Invoke-RestMethod -MockWith { throw "This is a default mock." } -ModuleName Runner
+
+        Mock -CommandName Invoke-RestMethod -ParameterFilter { $Uri -like '*/tracks?*' } -MockWith {
+            @() # no tracks found
+        } -ModuleName Runner
+
+        { Get-RandomTrack -Length 9 -Difficulty easy } | Should -Throw "No routes found matching the criteria."
+    }
 }
