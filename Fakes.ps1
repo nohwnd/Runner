@@ -7,7 +7,7 @@ function Get-Secret {
         [string] $Vault
     )
 
-    "aaaa" 
+    "aaaa" | ConvertTo-SecureString -AsPlainText -Force
 }
 
 function Send-EmailMessage {

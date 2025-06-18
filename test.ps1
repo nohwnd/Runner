@@ -7,6 +7,7 @@ $pesterConfiguration.CodeCoverage.Path = @(
     "$PSScriptRoot\private",
     "$PSScriptRoot\Runner.psm1"
 )
+$pesterConfiguration.CodeCoverage.OutputFormat = 'CoverageGutters'
 $pesterConfiguration.Run.PassThru = $true
 
 $result = Invoke-Pester -Configuration $pesterConfiguration
