@@ -9,6 +9,7 @@ $pesterConfiguration.CodeCoverage.Path = @(
 )
 $pesterConfiguration.CodeCoverage.OutputFormat = 'CoverageGutters'
 $pesterConfiguration.Run.PassThru = $true
+# $pesterConfiguration.Run.TestExtension = "IntegrationTests.ps1"
 
 $result = Invoke-Pester -Configuration $pesterConfiguration
 
