@@ -2,6 +2,8 @@ Import-Module "$PSScriptRoot\Runner.psm1" -Force
 
 $pesterConfiguration = New-PesterConfiguration
 
+$pesterconfiguration.Output.Verbosity = 'Detailed'
+
 # Enable code coverage
 $pesterConfiguration.CodeCoverage.Enabled = $true
 $pesterConfiguration.CodeCoverage.Path = @(
@@ -24,18 +26,6 @@ $pesterConfiguration.Run.PassThru = $true
 
 # Run the tests
 $result = Invoke-Pester -Configuration $pesterConfiguration
-
-# Display missed commands for local debugging
-Write-Host "=== Commands Missed ===" -ForegroundColor Yellow
-$result.CodeCoverage.CommandsMissed | Select-Object -Property Command, File, Line | Format-Table -AutoSize
-
-# Display coverage summary
-Write-Host "=== Coverage Summary ===" -ForegroundColor Green
-Write-Host "Commands Analyzed: $($result.CodeCoverage.CommandsAnalyzed)" -ForegroundColor White
-Write-Host "Commands Executed: $($result.CodeCoverage.CommandsExecuted)" -ForegroundColor White  
-Write-Host "Commands Missed: $($result.CodeCoverage.CommandsMissed.Count)" -ForegroundColor White
-$coveragePercent = [math]::Round(($result.CodeCoverage.CommandsExecuted / $result.CodeCoverage.CommandsAnalyzed) * 100, 2)
-Write-Host "Coverage Percentage: $coveragePercent%" -ForegroundColor $(if($coveragePercent -ge 80) { 'Green' } elseif($coveragePercent -ge 60) { 'Yellow' } else { 'Red' })
 
 # Exit with error code if tests failed
 if ($result.FailedCount -gt 0) {
