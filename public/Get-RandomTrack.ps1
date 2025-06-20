@@ -10,6 +10,11 @@ function Get-RandomTrack {
         $Unit = "km"
     )
 
+    # REMOVE to show the bug.
+    if ($Unit -eq "mi") {
+        $Length = ConvertTo-Km -Mile $Length
+    }
+
     $url = Get-Url -Route "tracks" -Parameters @{ 
         length     = $Length
         trackDifficulty = ConvertTo-DifficultyNumber $Difficulty
