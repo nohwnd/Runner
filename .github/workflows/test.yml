@@ -1,0 +1,31 @@
+name: PowerShell Tests and Coverage
+
+on:
+  push:
+    branches: [ main, develop, richard]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Pester
+      shell: pwsh
+      run: |
+        Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser -AllowPrerelease
+        
+    - name: Run tests with coverage
+      shell: pwsh
+      run: |
+        ./test.ps1
+        
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
