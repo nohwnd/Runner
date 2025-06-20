@@ -2,7 +2,7 @@ name: PowerShell Tests and Coverage
 
 on:
   push:
-    branches: [ main, develop , richard]
+    branches: [ main, develop, richard]
   pull_request:
     branches: [ main ]
 
@@ -13,9 +13,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Install PowerShell
-      uses: actions/setup-powershell@v1
       
     - name: Install Pester
       shell: pwsh
