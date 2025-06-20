@@ -1,4 +1,4 @@
-# Runner - THE PowerShell module runners
+# Runner - THE PowerShell module for runners
 
 [![PowerShell Tests and Coverage](https://github.com/nohwnd/Runner/actions/workflows/test.yml/badge.svg)](https://github.com/nohwnd/Runner/actions/workflows/test.yml)
 
