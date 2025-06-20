@@ -32,10 +32,3 @@ if ($result.FailedCount -gt 0) {
     Write-Error "Tests failed: $($result.FailedCount) failed out of $($result.TotalCount)"
     exit 1
 }
-
-# Exit with error code if coverage is too low (optional)
-if ($coveragePercent -lt 60) {
-    Write-Warning "Code coverage is below 60% ($coveragePercent%)"
-    # Uncomment the next line if you want to fail the build on low coverage
-    # exit 1
-}
